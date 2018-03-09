@@ -174,7 +174,7 @@ def temperature(chat_id,content):
 	bot.sendMessage(chat_id, ans)
 
 def returnHelp(chat_id,content):
-	ans = 'Hi! I\'m Audrey the plant! 🌱\n\nHere are some of the things I can do!\n/greenthumb - Activate Green Thumb Mode\n/auto - Activate Auto Watering Mode\n/temperature - Get the temperature\n\nI am a project made for 10.009 1D Project by Abi, Benedict, Ivan, Wesson, Yu Lian.'
+	ans = 'Hi! I\'m Audrey the plant! 🌱\n\nHere are some of the things I can do!\n/greenthumb - Activate Green Thumb Mode\n/auto - Activate Auto Watering Mode\n/temperature - Get the temperature\n/hello - Chat with me!\n\nI am a project made for 10.009 1D Project by Abi, Benedict, Ivan, Wesson, Yu Lian.'
 	bot.sendMessage(chat_id, ans)
 
 def chatBot(chat_id,content):#
