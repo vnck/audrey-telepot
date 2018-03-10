@@ -4,12 +4,23 @@ import time
 
 from firebase import firebase
 
+from pawsChat_dict import *
+import urllib.parse
+import requests
+import json
+from random import*
+from string import punctuation
+
 bot = telepot.Bot('TELEGRAM KEY HERE')
 
 url = "FIREBASE URL HERE"
 token = "FIREBASE TOKEN HERE"
 
 firebase = firebase.FirebaseApplication(url, token)
+
+is_chatting = False
+
+bean_chatbot = pawsChat()
 
 def returnHello(chat_id):
 	bot.sendMessage(chat_id, 'Hi! I\'m Audrey the plant! 🌱')
@@ -36,16 +47,38 @@ def temperature(chat_id):
 	bot.sendMessage(chat_id, ans)
 
 def returnHelp(chat_id):
-	ans = 'Hi! I\'m Audrey the plant! 🌱\n\nHere are some of the things I can do!\n/greenthumb - Activate Green Thumb Mode\n/auto - Activate Auto Watering Mode\n/temperature - Get the temperature\n\nI am a project made for 10.009 1D Project by Abi, Benedict, Ivan, Wesson, Yu Lian.'
+	ans = 'Hi! I\'m Audrey the plant! 🌱\n\nHere are some of the things I can do!\n/greenthumb - Activate Green Thumb Mode\n/auto - Activate Auto Watering Mode\n/temperature - Get the temperature\n/chat - Chat with me!\n\nI am a project made for 10.009 1D Project by Abi, Benedict, Ivan, Wesson, Yu Lian.'
 	bot.sendMessage(chat_id, ans)
 
+def chatBot(chat_id,content):#
+        global is_chatting
+        if not is_chatting:
+                is_chatting = True
+                bot.sendMessage(chat_id, 'Hi I\'m Audrey. Who are You?')
+        elif "What is" in content:
+                strip_punctuation=''.join(c for c in content if c not in punctuation)
+                q=strip_punctuation[8:]
+                main_api = 'https://newsapi.org/v2/top-headlines?'+urllib.parse.urlencode({'q': q})+'&apiKey=77e4bb173d4143e18b5736660a93de14'
+                data = requests.get(main_api).json()
+                ls=[]
+                for i in data['articles']:
+                        ls.append(i['title']+'\n'+i['description']+'\n'+i['url'])
+                if len(ls)==0:
+                        bot.sendMessage(chat_id, 'paiseh i cannot find it in my newspaper...')
+                else:
+                        bot.sendMessage(chat_id, ls[randint(0,len(ls)-1)])
+                        bot.sendMessage(chat_id, bean_chatbot.pawsDict(content))
+        else:
+                bot.sendMessage(chat_id, bean_chatbot.pawsDict(content))	
+	
 command = {
-	"/greenthumb": activateGreenThumb,
-	"/auto": activateAutoMode,
-	"/start": returnHello,
-	"/temperature": temperature,
-	"/help": returnHelp,
-	"help": returnHelp,
+	"/greenthumb": activateGreenThumb(chat_id),
+	"/auto": activateAutoMode(chat_id),
+	"/start": returnHello(chat_id),
+	"/temperature": temperature(chat_id),
+	"/help": returnHelp(chat_id),
+	"help": returnHelp(chat_id),
+	"/chat": chatBot(chat_id,content)
 }
 
 
@@ -56,9 +89,12 @@ def handle(msg):
 	if content_type == 'text':
 
 		if content in command.keys():
-			command[content](chat_id)
+			command[content]
+			
+		elif is_chatting:
+			chatBot(chat_id, content)
 
-		if content[0] != '/':
+		if content[0] != '/': #is this to test if the chat is working?
 			bot.sendMessage(chat_id, '🌱')
 
 
