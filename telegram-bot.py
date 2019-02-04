@@ -11,10 +11,10 @@ import json#
 from random import*#
 from string import punctuation#
 
-bot = telepot.Bot('479038305:AAEDxbEdF2YA7b0_X5xoOd1-UAXEdt0twIc')
+bot = telepot.Bot('insert-telegram-bot-token-here')
 
-url = "https://thymioisluv.firebaseio.com/" # URL to Firebase database
-token = "IKRMAnftihnOOalJjAkDUz02kVbRonrcJnACRlc1" # unique token used for authentication
+url = "insert-firebase-url-token-here" # URL to Firebase database
+token = "insert-firebase-authentication-token-here" # unique token used for authentication
 
 firebase = firebase.FirebaseApplication(url, token)
 
